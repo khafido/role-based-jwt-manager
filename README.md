@@ -48,7 +48,7 @@ The project follows a **Layered Architecture** to ensure scalability and maintai
 ### Installation
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/your-username/role-based-jwt-manager.git
+    git clone [https://github.com/your-username/role-based-jwt-manager.git](https://github.com/khafido/role-based-jwt-manager.git)
     cd role-based-jwt-manager
     ```
 
