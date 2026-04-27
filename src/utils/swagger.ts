@@ -2,6 +2,7 @@ import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { Application } from 'express';
 import path from 'path';
+import { docsRateLimit } from '@/utils/security.js';
 
 const options = {
   definition: {
@@ -50,15 +51,15 @@ const options = {
 const swaggerSpec = swaggerJsDoc(options);
 
 export const setupSwagger = (app: Application) => {
-  // Serve Swagger UI
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
+  // Serve Swagger UI with rate limiting
+  app.use('/docs', docsRateLimit, swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     explorer: true,
     customCss: '.swagger-ui .topbar { display: none }',
     customSiteTitle: 'Role-Based JWT Manager API Documentation'
   }));
   
-  // Serve JSON spec
-  app.get('/docs.json', (_req, res) => {
+  // Serve JSON spec with rate limiting
+  app.get('/docs.json', docsRateLimit, (_req, res) => {
     res.setHeader('Content-Type', 'application/json');
     res.send(swaggerSpec);
   });

@@ -1,10 +1,15 @@
 import express, { type Express, type Request, type Response } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
-import helmet from 'helmet';
 import connectDB from '@/config/db';
 import logger from '@/utils/logger';
 import { setupSwagger } from '@/utils/swagger.js';
+import { 
+  securityHeaders, 
+  globalRateLimit, 
+  authRateLimit, 
+  apiRateLimit
+} from '@/utils/security.js';
 
 // Load environment variables
 dotenv.config();
@@ -12,9 +17,12 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-// Security & Middleware
-app.use(helmet());
+// Enhanced Security Headers
+app.use(securityHeaders);
 app.use(cors());
+
+// Global Rate Limiting
+app.use(globalRateLimit);
 
 // JSON parsing with error handling
 app.use((req, res, next) => {
@@ -42,8 +50,10 @@ app.get('/health', (_: Request, res: Response) => {
 import authRoutes from '@/routes/auth.routes.js';
 import protectedRoutes from '@/routes/protected.routes.js';
 import { errorHandler, notFoundHandler } from '@/middlewares/error.middleware.js';
-app.use('/api/auth', authRoutes);
-app.use('/api/protected', protectedRoutes);
+
+// Apply specific rate limiting to different route groups
+app.use('/api/auth', authRateLimit, authRoutes);
+app.use('/api/protected', apiRateLimit, protectedRoutes);
 
 // Swagger Documentation (before error handlers)
 setupSwagger(app);
