@@ -1,0 +1,58 @@
+{
+  "name": "role-based-jwt-manager",
+  "version": "1.0.0",
+  "description": "A production-ready **Authentication & Authorization Service** built with a focus on security, type safety, and observability. This project implements a robust JWT-based system with granular Role-Based Access Control (RBAC).",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc && tsc-alias",
+    "start": "node dist/index.js",
+    "test": "jest",
+    "seed": "tsx scripts/seed.ts seed",
+    "seed:users": "tsx scripts/seed.ts seed:users",
+    "seed:fresh": "tsx scripts/seed.ts seed:fresh",
+    "seed:clear": "tsx scripts/seed.ts seed:clear"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khafido/role-based-jwt-manager.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/khafido/role-based-jwt-manager/issues"
+  },
+  "homepage": "https://github.com/khafido/role-based-jwt-manager#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.3.2",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.4.1",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
+    "tsc-alias": "^1.8.16",
+    "tsx": "^4.21.0",
+    "winston": "^3.19.0",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@tsconfig/node24": "^24.0.4",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/mongoose": "^5.11.96",
+    "@types/node": "^25.5.2",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.8",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^6.0.2"
+  }
+}

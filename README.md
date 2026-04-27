@@ -100,3 +100,6 @@ router.get('/mentor-dashboard',
   authorizeRoles('ADMIN', 'MENTOR'), 
   getDashboardData
 );
+
+
+docker exec -it mongodb mongosh -u admin -p password --authenticationDatabase admin
