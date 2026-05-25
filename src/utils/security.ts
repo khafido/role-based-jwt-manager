@@ -10,7 +10,7 @@ import { Request, Response, NextFunction } from 'express';
  * Enhanced helmet configuration with comprehensive security headers
  */
 export const securityHeaders = helmet({
-  // Content Security Policy
+  // Skip for /docs route
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
@@ -55,12 +55,21 @@ export const securityHeaders = helmet({
   xXssProtection: true
 });
 
+// Wrapper to skip security headers for /docs
+export const securityHeadersMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  if (req.path.startsWith('/docs')) {
+    return next();
+  }
+  return securityHeaders(req, res, next);
+};
+
 /**
  * Global rate limiting configuration
  */
 export const globalRateLimit = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 1000, // Limit each IP to 1000 requests per windowMs
+  skip: (req: Request) => req.path.startsWith('/docs'),
   message: {
     success: false,
     message: 'Too many requests from this IP, please try again later.',

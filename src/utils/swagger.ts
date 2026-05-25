@@ -51,6 +51,10 @@ const options = {
 const swaggerSpec = swaggerJsDoc(options);
 
 export const setupSwagger = (app: Application) => {
+  if (process.env.NODE_ENV !== 'development') {
+    return;
+  }
+
   // Serve Swagger UI with rate limiting
   app.use('/docs', docsRateLimit, swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     explorer: true,

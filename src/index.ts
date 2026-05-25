@@ -5,11 +5,16 @@ import connectDB from '@/config/db';
 import logger from '@/utils/logger';
 import { setupSwagger } from '@/utils/swagger.js';
 import { 
-  securityHeaders, 
+  securityHeadersMiddleware, 
   globalRateLimit, 
   authRateLimit, 
   apiRateLimit
 } from '@/utils/security.js';
+
+// API Routes
+import authRoutes from '@/routes/auth.routes.js';
+import protectedRoutes from '@/routes/protected.routes.js';
+import { errorHandler, notFoundHandler } from '@/middlewares/error.middleware.js';
 
 // Load environment variables
 dotenv.config();
@@ -17,9 +22,14 @@ dotenv.config();
 const app: Express = express();
 const port = process.env.PORT || 3000;
 
-// Enhanced Security Headers
-app.use(securityHeaders);
-app.use(cors());
+// Enhanced Security Headers (skipped for /docs)
+app.use(securityHeadersMiddleware);
+app.use(cors({
+  origin: process.env.FRONTEND_URL,
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+}));
 
 // Global Rate Limiting
 app.use(globalRateLimit);
@@ -45,11 +55,6 @@ app.use(express.urlencoded({ extended: true }));
 app.get('/health', (_: Request, res: Response) => {
   res.status(200).json({ status: 'OK', message: 'API is healthy' });
 });
-
-// API Routes
-import authRoutes from '@/routes/auth.routes.js';
-import protectedRoutes from '@/routes/protected.routes.js';
-import { errorHandler, notFoundHandler } from '@/middlewares/error.middleware.js';
 
 // Apply specific rate limiting to different route groups
 app.use('/api/auth', authRateLimit, authRoutes);

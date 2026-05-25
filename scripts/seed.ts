@@ -241,32 +241,6 @@ const seedWithOptions = async (options: {
   }
 };
 
-/**
- * Clear all users (dangerous operation)
- */
-const clearUsers = async (): Promise<void> => {
-  try {
-    logger.warn('⚠️  WARNING: This will delete all users from the database!');
-    
-    // Add confirmation prompt in production
-    if (process.env.NODE_ENV === 'production') {
-      logger.error('Cannot clear users in production environment');
-      process.exit(1);
-    }
-    
-    await connectDB();
-    
-    const deletedCount = await User.deleteMany({});
-    logger.info(`Deleted ${deletedCount.deletedCount} users`);
-    
-  } catch (error) {
-    logger.error('Failed to clear users:', error);
-    process.exit(1);
-  } finally {
-    await disconnectDB();
-  }
-};
-
 // CLI interface
 const command = process.argv[2];
 
@@ -277,9 +251,6 @@ switch (command) {
   case 'seed:users':
     seedWithOptions({ usersOnly: true });
     break;
-  case 'seed:clear':
-    clearUsers();
-    break;
   case 'seed:fresh':
     seedWithOptions({ clearExisting: true });
     break;
@@ -287,9 +258,8 @@ switch (command) {
     logger.info('Usage:');
     logger.info('  npm run seed              - Seed all data');
     logger.info('  npm run seed:users        - Seed only users');
-    logger.info('  npm run seed:fresh         - Clear existing and seed fresh data');
-    logger.info('  npm run seed:clear         - Clear all users (development only)');
+    logger.info('  npm run seed:fresh        - Clear existing and seed fresh data');
     break;
 }
 
-export { seed, clearUsers, seedWithOptions };
+export { seed, seedWithOptions };
